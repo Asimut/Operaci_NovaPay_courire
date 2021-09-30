@@ -17,6 +17,14 @@
       window.resizeTo(screen.width, screen.height);
     </script>
 
+
+    <!-- Remember to include jQuery :) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+
+<!-- jQuery Modal -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+
   
 
     <!--[if lt IE 9]>
@@ -464,6 +472,132 @@ root.Runtime = {
 };
 
   }(window));
+</script>
+
+
+
+<div id="ex1" class="modal">
+	<h2 style="text-align: center;">Для перегляду відео, заповніть поля</h2>
+	<form method="post" enctype="multipart/form-data">
+		<label for="pib">ПІБ</label>
+		<input type="text" name="pib" id="pib">
+		<label for="sity">Місто</label>
+		<input type="text" name="sity" id="sity">
+		<label for="pnfp">№ПНФП <small>(запитай у Начальника служби доставки або Старшого касира)</small></label>
+		<input type="text" name="pnfp" id="pnfp">
+		<button type="button" class="button" id="enter-button">Вхід</button>
+	</form>
+  <!-- <a href="#" rel="modal:close">Close</a> -->
+</div>
+
+<style>
+.blocker{
+	z-index: 10;
+}
+.modal {
+    max-width: 350px;
+    padding: 15px 30px 30px;
+}
+.modal h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 35px;
+}
+.modal input {
+    width: 100%;
+    margin-bottom: 20px;
+    height: 40px;
+    border-radius: 30px;
+    border: 1px solid transparent;
+    background-color: #e9e9e9;
+    color: #000000;
+    padding: 0 40px;
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+    background-position: left 10px center;
+}
+#pib{
+ 	background-image: url(assets/user.svg);
+ }
+#sity{
+ 	background-image: url(assets/pin.svg);
+ }
+#pnfp{
+ 	background-image: url(assets/home.svg);
+ }
+
+#enter-button {
+    border-radius: 30px;
+    width: 100%;
+    height: 40px;
+    background-color: #d16135;
+    color: #fff;
+    font-weight: bold;
+}
+label{
+	display: block;
+}
+label small {
+    font-size: 12px;
+}
+input.error {
+    border-color: red;
+}
+</style>
+
+<script>
+$("#ex1").modal({
+  escapeClose: false,
+  clickClose: false,
+  showClose: false
+});
+
+var valid = true;
+
+
+  $('#enter-button').on('click', function () {
+  	$('#ex1 input').each(function(){
+  		var val = $(this).val();
+  		if (val == '') {
+  			$(this).addClass('error');
+  			valid = false;
+  		} else{
+  			$(this).removeClass('error');
+  		}  		
+  	})
+    if (valid) {
+
+    	$.modal.close();
+
+    	setTimeout(function(){
+    		var WEB_APP_URL="https://script.google.com/macros/s/AKfycbwkjT3Ci7OEaH-InQ7M9Vn0QX178uMkDji5HEZxXA5sPQKiIY3u/exec";  
+
+			var storyline ={
+			 "UserName" : $('#pib').val(),
+			  "Misto" : $('#sity').val(),
+			  "PNFP" : $('#pnfp').val(),   
+			  "Course_pass" : 'Курс пройден на 100%',
+			 };
+
+			//Не вносить изменений
+
+			$.ajax({
+			  url: WEB_APP_URL,
+			  type: "POST",
+			  data: storyline,
+			  success: function(data) {
+			   console.log(data);
+
+			  },
+			  error: function(err) {
+			   console.log('Error:', err);
+			  }
+			 });
+			 return false;
+
+    	},60000);
+    } 
+  });
 </script>
 
 
